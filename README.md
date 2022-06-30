@@ -1,6 +1,7 @@
-## Magpie PHP Developer Challenge
+## Magpie PHP Developer Challenge Solution
 
-Your task is to gather data about the products listed on https://www.magpiehq.com/developer-challenge/smartphones
+
+Task is to gather data about the products listed on https://www.magpiehq.com/developer-challenge/smartphones
 
 The final output of your script should be an array of objects similar to the example below:
 
