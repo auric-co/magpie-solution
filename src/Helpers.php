@@ -51,6 +51,8 @@ class Helpers
                 return date("Y-m-d", strtotime(substr($text2,13)));
             }elseif(str_contains($text2, "Order within")){
                 return date("Y-m-d", strtotime(substr($text2,-11)));
+            }elseif(str_contains($text2, "Available on")){
+                return date("Y-m-d", strtotime(substr($text2,-12)));
             }
             else{
                 return $text2;
