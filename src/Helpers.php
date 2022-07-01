@@ -9,6 +9,26 @@ class Helpers
         return stristr($search,substr($text,0,8)) == true;
     }
 
+    public function expandByColor(array $list):array{
+        $products = [];
+        foreach ($list as $product){
+            foreach ($product->colour as $colour){
+                $productObject = (object)[
+                    "title" => $product->title,
+                    "price" => $product->price,
+                    "colour" => $colour,
+                    "imageUrl" => $product->imageUrl,
+                    "capacityMB" => $product->capacityMB,
+                    "availabilityText" => $product->availabilityText,
+                    "isAvailable" => $product->isAvailable,
+                    "shippingDate" => $product->shippingDate
+                ];
+                $products[] = $productObject;
+            }
+        }
+        return $products;
+    }
+
     public function shippingDate($text, $text2):string{
         if ($text == $text2){
             return "0000-00-00";
@@ -38,52 +58,10 @@ class Helpers
         }
     }
 
-    public function duplicateIndexes(array $list):array{
-        $temp = [];
-        $indexes = [];
-        foreach ($list as $key=> $item){
-            //define product with values that make it a duplicate.
-            $product = new Product();
-            $product->title = $item->title;
-            $product->capacityMB = $item->capacityMB;
-            $product->price = $item->price;
-            //check if current iterated product is in array, if so save index values
-            if (in_array($product, $temp)){
-                $indexes[] = [$key, array_search($product, $temp)];
-            }
-            $temp[] = $product;
-        }
-        return $indexes;
-    }
-
-    public function duplicateProducts(array $list):array{
-        $indexes = $this->duplicateIndexes($list);
-        $duplicates = [];
-        //find duplicates from original list and return
-        foreach ($indexes as $index){
-            foreach ($index as $value){
-                $duplicates[] = $list[$value];
-            }
-
-        }
-        return $duplicates;
-    }
-
     public function uniqueProducts($list): array
     {
-        $indexes = $this->duplicateIndexes($list);
-        //remove all duplicates
-        $duplicates = $this->duplicateProducts($list);
-        foreach ($duplicates as $product){
-            $index = array_search($product, $list);
-            array_splice($list, $index, 1);
-        }
-//        //append first item from the two from each array of duplication
-        foreach ($indexes as $index){
-            $list[] = $duplicates[0];
-        }
-
-        return $list;
+        $products = $this->expandByColor($list);
+        return  array_values(array_unique($products, SORT_REGULAR));
     }
 
     public function capacityFormat($text): string{
@@ -99,19 +77,5 @@ class Helpers
             $formattedCapacity = (int)substr($strippedText, 0,$len) * 1000;
         }
         return $formattedCapacity;
-    }
-
-    public function color(array $colors){
-        $finalValue = "";
-        $colors = array_unique($colors);
-        //create string from array
-        foreach ($colors as $key => $color){
-            if ($key == 0){
-                $finalValue = $color;
-            }else{
-                $finalValue = $finalValue.",".$color;
-            }
-        }
-        return $finalValue;
     }
 }

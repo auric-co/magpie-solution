@@ -32,7 +32,7 @@ class Scrape
                         $product->title = $node->filter(".product-name")->text();
                         $product->capacityMB = $this->helper->capacityFormat($node->filter(".product-capacity")->text());
                         $product->imageUrl = $this->url.substr($node->filter('img')->attr('src'), 2);
-                        $product->colour = $this->helper->color($this->colors);
+                        $product->colour = $this->colors;
                         $product->price = $node->filter('div[class="my-8 block text-center text-lg"]')->text();
                         $product->availabilityText = substr($node->filter('div[class="my-4 text-sm block text-center"]')->first()->text(),14);
                         $product->shippingDate = $this->helper->shippingDate($node->filter('div[class="my-4 text-sm block text-center"]')->first()->text(), $node->filter('div[class="my-4 text-sm block text-center"]')->last()->text());
@@ -45,8 +45,8 @@ class Scrape
 
         });
         file_put_contents('output.json', json_encode($this->helper->uniqueProducts($this->products)));
-//        header('Content-Type: application/json');
-//        echo json_encode($this->helper->uniqueProducts($this->products));
+        header('Content-Type: application/json');
+        echo json_encode($this->helper->uniqueProducts($this->products));
     }
 }
 
